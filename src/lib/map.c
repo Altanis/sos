@@ -20,7 +20,7 @@ void map_init(struct map *m) {
 
 void map_resize(struct map *m, double resize_factor) {
 	m->size *= resize_factor;
-	m->table = realloc(m->table, m->size * resize_factor);
+	m->table = realloc(m->table, m->size * sizeof(struct entry));
 }
 
 void map_free(struct map *m) {
