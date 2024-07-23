@@ -15,6 +15,7 @@ void map_init(struct map *m) {
 	size_t size = 1024 * 1024;
 
 	m->table = calloc(size, sizeof(struct entry));
+	m->used = 0;
 	m->size = size;
 }
 
