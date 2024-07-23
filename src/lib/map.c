@@ -18,26 +18,31 @@ void map_init(struct map *m) {
 	m->size = size;
 }
 
+void map_resize(struct map *m, double resize_factor) {
+	m->size *= resize_factor;
+	m->table = realloc(m->table, m->size * resize_factor);
+}
+
 void map_free(struct map *m) {
 	free(m->table);
 }
 
 void map_put(struct map *m, void *key, void *value, size_t size) {
+	if (m->used * 2 >= m->size) {
+		map_resize(m, 2);
+	}
+
 	size_t idx = fnv_1a(key, size) % m->size;
 	size_t start = idx;
-
 	
 	while (m->table[idx].key != NULL) {
 		idx = (++idx) % m->size;
-		if (idx == start) return NULL;
 		if (memcmp(key, m->table[idx].key, size) == 0) break;
 	}
 
 	m->table[idx].key = key;
 	m->table[idx].value = value;
 	m->used++;
-
-	return 0;
 }
 
 void *map_get(struct map *m, void *key, size_t size) {
